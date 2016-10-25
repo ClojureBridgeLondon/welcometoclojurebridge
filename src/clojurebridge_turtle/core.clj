@@ -17,6 +17,9 @@
 ;; at the beginning, only :trinity is there
 (def turtles (atom {:trinity trinity}))
 
+(defn apply-to-turtle [turtle f]
+  (swap! turtles #(f (turtle %))))
+
 ;; lines map
 ;; {:name [[xs0 ys0 xe0 ye0] [xs1 ys1 xe1 ye1]]}
 ;; at the beginning, only :trinity is there
