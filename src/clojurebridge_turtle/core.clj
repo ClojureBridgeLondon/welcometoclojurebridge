@@ -15,7 +15,7 @@
 ;; turtles map
 ;; {:name {:x x :y y :angle a :color [r g b]}
 ;; at the beginning, only :trinity is there
-(def turtles (atom {:trinity trinity}))
+(def turtles (atom {}))
 
 (defn apply-to-turtle [turtle f]
   (swap! turtles #(f (turtle %))))
@@ -42,15 +42,11 @@
   "creates a new turtle with a name and adds to turtls map.
    additionally, allows to choose color, which is a vector of [r g b]"
   ([name]
-     (add-turtle (keyword name) (rand-color)))
-  ([name color]
+   (add-turtle (keyword name) {:x 0 :y 0 :angle 90 :color (rand-color)}))
+  ([name turtle]
      (let [n (keyword name)]
-       (when-not (n @turtles)
-         (swap! lines assoc n [])
-         (swap! turtles assoc n {:x 0
-                                 :y 0
-                                 :angle 90
-                                 :color color}))
+       (swap! lines assoc n [])
+       (swap! turtles assoc n turtle)
        {n (n @turtles)})))
 
 (defn turtle-names
