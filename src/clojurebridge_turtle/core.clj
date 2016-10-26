@@ -5,7 +5,16 @@
 ;; ClojureBridge version is focusing on more Clojure-ish style.
 ;;
 (ns clojurebridge-turtle.core
-  (:require [quil.core :as q]))
+  (:require [quil.core :as q]
+            [clojure.spec :as s]))
+
+
+(s/def ::color (s/coll-of number? :count 3))
+(s/def ::x number?)
+(s/def ::y number?)
+(s/def ::angle number?)
+
+(s/def ::turtle (s/keys :req-un [::x ::y ::color ::angle]))
 
 (def trinity {:x 0
               :y 0
@@ -44,10 +53,13 @@
   ([name]
    (add-turtle (keyword name) {:x 0 :y 0 :angle 90 :color (rand-color)}))
   ([name turtle]
-     (let [n (keyword name)]
-       (swap! lines assoc n [])
-       (swap! turtles assoc n turtle)
-       {n (n @turtles)})))
+   {:pre [(s/valid? ::turtle turtle)]}
+   (let [n (keyword name)]
+     (swap! lines assoc n [])
+     (swap! turtles assoc n turtle)
+     {n (n @turtles)})))
+
+
 
 (defn turtle-names
   "returns turtle names"
